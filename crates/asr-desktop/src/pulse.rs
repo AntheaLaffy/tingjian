@@ -46,8 +46,8 @@ fn wait(mainloop: &mut Mainloop, mut done: impl FnMut() -> Result<bool>) -> Resu
 impl Connection {
     fn new() -> Result<Self> {
         let mut mainloop = Mainloop::new().context("Cannot create system audio event loop")?;
-        let mut context = Context::new(&mainloop, "Classroom ASR")
-            .context("Cannot create system audio connection")?;
+        let mut context =
+            Context::new(&mainloop, "Tingjian").context("Cannot create system audio connection")?;
         context.connect(None, ContextFlags::NOAUTOSPAWN, None)?;
         wait(&mut mainloop, || match context.get_state() {
             ContextState::Ready => Ok(true),
@@ -188,7 +188,7 @@ impl Capture {
             channels: 1,
             rate: RATE,
         };
-        let mut stream = Stream::new(&mut connection.context, "Classroom recording", &spec, None)
+        let mut stream = Stream::new(&mut connection.context, "Tingjian recording", &spec, None)
             .context("Cannot create system recording stream")?;
         let attr = pulse::def::BufferAttr {
             maxlength: RATE * 4 * 2,

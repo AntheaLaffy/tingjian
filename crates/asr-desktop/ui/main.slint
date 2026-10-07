@@ -3,7 +3,7 @@ export { Palette }
 
 export component AppWindow inherits Window {
     init => { Palette.color-scheme = ColorScheme.light; }
-    title: "课堂转录 · Qwen3-ASR";
+    title: "听笺";
     preferred-width: 1080px;
     preferred-height: 820px;
     min-width: 820px;
@@ -43,8 +43,8 @@ export component AppWindow inherits Window {
             VerticalBox {
                 padding: 0px;
                 spacing: 6px;
-                Text { text: "课堂转录"; font-size: 28px; font-weight: 700; color: #19243b; }
-                Text { text: "离线记录中文与英文课堂，录音与笔记保存在本机。"; font-size: 14px; color: #718096; }
+                Text { text: "听笺"; font-size: 28px; font-weight: 700; color: #19243b; }
+                Text { text: "听课成笺 · 离线记录中英文课堂，录音与笔记保存在本机。"; font-size: 14px; color: #718096; }
             }
             Rectangle { horizontal-stretch: 1; }
             Text { text: "Qwen3-ASR 0.6B"; color: #4263eb; font-size: 14px; vertical-alignment: center; }

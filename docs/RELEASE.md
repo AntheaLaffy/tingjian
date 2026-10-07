@@ -1,9 +1,9 @@
 # Release downloads
 
-Releases are published at <https://github.com/AntheaLaffy/asr/releases>.
+Releases are published at <https://github.com/AntheaLaffy/tingjian/releases>.
 
-`classroom-asr-v0.1.0-linux-x86_64.tar.gz` contains `classroom-asr` (desktop),
-`asr` (CLI), `tools/download_model.py`, the README and backend/validation docs,
+`tingjian-v0.1.0-linux-x86_64.tar.gz` contains `tingjian` (desktop),
+`tingjian-cli` (CLI), `tools/download_model.py`, the README and backend/validation docs,
 and project and dependency license notices. Model weights are downloaded
 separately. The archive has no Python inference runtime.
 
@@ -23,11 +23,11 @@ Download the archive and `SHA256SUMS` into the same directory, then run:
 
 ```sh
 sha256sum --check --ignore-missing SHA256SUMS
-tar -xzf classroom-asr-v0.1.0-linux-x86_64.tar.gz
-cd classroom-asr-v0.1.0-linux-x86_64
+tar -xzf tingjian-v0.1.0-linux-x86_64.tar.gz
+cd tingjian-v0.1.0-linux-x86_64
 python3 tools/download_model.py
-./asr gpu-check
-./classroom-asr --fp16
+./tingjian-cli gpu-check
+./tingjian --fp16
 ```
 
 The downloader uses Python 3 and curl, pins the official Qwen3-ASR-0.6B
@@ -42,7 +42,7 @@ from which you start the application.
 For a WAV file:
 
 ```sh
-./asr transcribe lesson.wav --fp16 --language chinese --json
+./tingjian-cli transcribe lesson.wav --fp16 --language chinese --json
 ```
 
 ## Scope of v0.1.0
@@ -66,5 +66,5 @@ GPL-3.0-only using Slint's open-source license option; the archive includes
 `THIRD-PARTY-LICENSES.md` and `licenses/dependencies/`.
 
 The corresponding application source is available at
-<https://github.com/AntheaLaffy/asr/tree/v0.1.0>. `Cargo.lock` pins dependency
+<https://github.com/AntheaLaffy/tingjian/tree/v0.1.0>. `Cargo.lock` pins dependency
 versions, and the third-party catalog links to each dependency's source.

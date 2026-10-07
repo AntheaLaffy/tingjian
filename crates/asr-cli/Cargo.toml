@@ -1,12 +1,12 @@
 [package]
-name = "classroom-asr-cli"
+name = "tingjian-cli"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
 license.workspace = true
 
 [[bin]]
-name = "asr"
+name = "tingjian-cli"
 path = "src/main.rs"
 
 [dependencies]

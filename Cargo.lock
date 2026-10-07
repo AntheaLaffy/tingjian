@@ -1472,34 +1472,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1c133bc6a41be0d194c306b5506d15e6feeea7b1d6604bd3f8310dfb2ca96486"
 
 [[package]]
-name = "classroom-asr"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "burn-wgpu",
- "clap",
- "cpal",
- "hound",
- "libpulse-binding",
- "qwen3-asr-core",
- "rfd",
- "serde_json",
- "slint",
- "slint-build",
-]
-
-[[package]]
-name = "classroom-asr-cli"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "burn-wgpu",
- "clap",
- "qwen3-asr-core",
- "serde_json",
-]
-
-[[package]]
 name = "clipboard-win"
 version = "5.4.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -7792,6 +7764,34 @@ name = "time-core"
 version = "0.1.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "9e1c906769ad99c88eaa54e728060edef082f8e358ff32030cb7c7d315e81109"
+
+[[package]]
+name = "tingjian"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "burn-wgpu",
+ "clap",
+ "cpal",
+ "hound",
+ "libpulse-binding",
+ "qwen3-asr-core",
+ "rfd",
+ "serde_json",
+ "slint",
+ "slint-build",
+]
+
+[[package]]
+name = "tingjian-cli"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "burn-wgpu",
+ "clap",
+ "qwen3-asr-core",
+ "serde_json",
+]
 
 [[package]]
 name = "tiny-keccak"

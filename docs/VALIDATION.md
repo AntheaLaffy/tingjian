@@ -3,7 +3,7 @@
 Target machine: Intel Core i5-13420H, Intel UHD Raptor Lake-P (i915),
 approximately 24 GB shared system memory, Arch Linux, Vulkan 1.4 / Mesa
 26.2.1. This machine has no discrete NVIDIA GPU. The runtime adapter name,
-driver and storage binding limits are recorded by `asr gpu-check`.
+driver and storage binding limits are recorded by `tingjian-cli gpu-check`.
 
 The first correctness target is the FP32 graph derived from the official
 BF16/F32 Qwen3-ASR-0.6B weights. Inputs and checkpoint revisions are fixed.

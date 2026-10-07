@@ -26,8 +26,9 @@ slint::include_modules!();
 
 #[derive(Parser)]
 #[command(
+    name = "tingjian",
     version,
-    about = "Offline classroom transcription with Qwen3-ASR and Slint"
+    about = "Tingjian: offline Chinese/English lecture transcription"
 )]
 struct Args {
     #[arg(long, default_value = "models/Qwen3-ASR-0.6B")]

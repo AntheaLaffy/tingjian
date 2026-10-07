@@ -5,7 +5,11 @@ use qwen3_asr_core::{audio, model::QwenAsr, tokenizer::Language};
 use std::{path::PathBuf, sync::atomic::AtomicBool, time::Instant};
 
 #[derive(Parser)]
-#[command(name = "asr", version, about = "Local Qwen3-ASR with CubeCL/wgpu")]
+#[command(
+    name = "tingjian-cli",
+    version,
+    about = "Tingjian: offline Chinese/English transcription"
+)]
 struct Args {
     #[command(subcommand)]
     command: Command,

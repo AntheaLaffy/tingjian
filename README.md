@@ -1,4 +1,4 @@
-# Classroom ASR
+# 听笺
 
 Offline Chinese / English classroom transcription, with a native Rust
 Qwen3-ASR-0.6B inference backend on CubeCL + wgpu and a Slint desktop UI.
@@ -9,15 +9,15 @@ the CPU. The application does not use Python or a remote inference service.
 ## Download
 
 Download the Linux x86_64 archive and `SHA256SUMS` from
-[GitHub Releases](https://github.com/AntheaLaffy/asr/releases). The archive contains
+[GitHub Releases](https://github.com/AntheaLaffy/tingjian/releases). The archive contains
 the desktop application, the CLI, documentation, and the model downloader.
 
 From the extracted directory:
 
 ```sh
 python3 tools/download_model.py
-./asr gpu-check
-./classroom-asr --fp16
+./tingjian-cli gpu-check
+./tingjian --fp16
 ```
 
 Python 3 and curl are needed only to download the model. Runtime requirements
@@ -35,9 +35,9 @@ access once; inference is entirely offline afterward.
 
 ```sh
 python3 tools/download_model.py
-cargo build --release --workspace -j 2
-./target/release/asr gpu-check
-./target/release/classroom-asr --fp16
+cargo build --release --workspace --locked -j 2
+./target/release/tingjian-cli gpu-check
+./target/release/tingjian --fp16
 ```
 
 The downloader pins model revision
@@ -68,9 +68,9 @@ validated on Windows. Other platforms list their available CPAL inputs, includin
 installed virtual audio devices.
 
 ```sh
-./target/release/asr transcribe lesson.wav --language chinese --json
-./target/release/classroom-asr --fp16 --audio lesson.wav --report report.json
-./target/release/classroom-asr --fp16 --recording-device system
+./target/release/tingjian-cli transcribe lesson.wav --language chinese --json
+./target/release/tingjian --fp16 --audio lesson.wav --report report.json
+./target/release/tingjian --fp16 --recording-device system
 ```
 
 The CLI accepts mono/stereo integer or float WAV files and resamples them to
@@ -94,17 +94,17 @@ inference separately from loading.
 ## Validation
 
 ```sh
-cargo test -p qwen3-asr-core
-cargo clippy --workspace --all-targets -- -D warnings
-./target/release/asr gpu-check
+cargo test --release --workspace --all-targets --locked -j 2
+cargo clippy --release --workspace --all-targets --locked -j 2 -- -D warnings
+./target/release/tingjian-cli gpu-check
 ```
 
 `gpu-check` reads actual GPU computation back and checks its result. The CLI can
 export mel features and encoder activations for independent comparisons:
 
 ```sh
-./target/release/asr mel sample.wav mel.f32
-./target/release/asr transcribe sample.wav --dump-encoder encoder.f32 --json
+./target/release/tingjian-cli mel sample.wav mel.f32
+./target/release/tingjian-cli transcribe sample.wav --dump-encoder encoder.f32 --json
 ```
 
 Desktop validation flags use the same real model and window as interactive
@@ -114,8 +114,8 @@ use. `--record-seconds 5` captures the selected source;
 Inspect device IDs or check recording without loading a model:
 
 ```sh
-./target/release/classroom-asr --list-recording-devices
-./target/release/classroom-asr --recording-device system --record-only --record-seconds 5
+./target/release/tingjian --list-recording-devices
+./target/release/tingjian --recording-device system --record-only --record-seconds 5
 ```
 
 `default` selects the default input; `system` resolves the default output's
