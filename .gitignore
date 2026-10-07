@@ -1,0 +1,6 @@
+/target/
+/models/
+/.local/
+/recordings/
+*.partial
+__pycache__/

@@ -1,0 +1,143 @@
+import { VerticalBox, HorizontalBox, Button, LineEdit, TextEdit, ComboBox, ProgressIndicator, Palette } from "std-widgets.slint";
+export { Palette }
+
+export component AppWindow inherits Window {
+    init => { Palette.color-scheme = ColorScheme.light; }
+    title: "课堂转录 · Qwen3-ASR";
+    preferred-width: 1080px;
+    preferred-height: 820px;
+    min-width: 820px;
+    min-height: 680px;
+    background: #f4f6fa;
+    in-out property <string> model-path: "models/Qwen3-ASR-0.6B";
+    in-out property <string> audio-path;
+    in-out property <string> transcript;
+    in-out property <string> status: "选择模型目录，加载后开始课堂转录。";
+    in-out property <string> detail: "完全离线 · 中文与英文";
+    in-out property <string> adapter;
+    in-out property <bool> busy;
+    in-out property <bool> loaded;
+    in-out property <bool> recording;
+    in-out property <int> language-index: 0;
+    in-out property <float> level: 0;
+    in-out property <bool> use-fp16: false;
+    in-out property <[string]> recording-devices;
+    in-out property <int> recording-device-index: 0;
+    in-out property <string> recording-hint;
+    in-out property <bool> refreshing-devices;
+    callback choose-model();
+    callback load-model();
+    callback choose-audio();
+    callback transcribe-file();
+    callback start-recording();
+    callback stop-recording();
+    callback cancel();
+    callback save-transcript();
+    callback refresh-recording-devices();
+    callback recording-device-changed(int);
+
+    VerticalBox {
+        padding: 28px;
+        spacing: 20px;
+        HorizontalBox {
+            VerticalBox {
+                padding: 0px;
+                spacing: 6px;
+                Text { text: "课堂转录"; font-size: 28px; font-weight: 700; color: #19243b; }
+                Text { text: "离线记录中文与英文课堂，录音与笔记保存在本机。"; font-size: 14px; color: #718096; }
+            }
+            Rectangle { horizontal-stretch: 1; }
+            Text { text: "Qwen3-ASR 0.6B"; color: #4263eb; font-size: 14px; vertical-alignment: center; }
+        }
+        Rectangle {
+            background: #ffffff;
+            border-radius: 12px;
+            border-color: #e4e9f2;
+            border-width: 1px;
+            height: 150px;
+            VerticalBox {
+                padding: 18px;
+                spacing: 12px;
+                HorizontalBox {
+                    Text { text: "本地模型"; width: 72px; color: #43516b; vertical-alignment: center; }
+                    LineEdit { text <=> root.model-path; enabled: !root.busy && !root.recording; }
+                    Button { text: "浏览"; enabled: !root.busy && !root.recording; clicked => { root.choose-model(); } }
+                    Button { text: root.loaded ? "重新加载" : "加载模型"; enabled: !root.busy && !root.recording; clicked => { root.load-model(); } }
+                }
+                HorizontalBox {
+                    Text { text: "课堂语言"; width: 72px; color: #43516b; vertical-alignment: center; }
+                    ComboBox { model: ["自动识别 / 中英混说", "中文", "英文"]; current-index <=> root.language-index; width: 220px; enabled: !root.recording && !root.busy; }
+                    Button { text: root.use-fp16 ? "精度：FP16" : "精度：FP32"; enabled: !root.recording && !root.busy; clicked => { root.use-fp16 = !root.use-fp16; root.loaded = false; } }
+                    Rectangle { horizontal-stretch: 1; }
+                    Text { text: root.adapter; color: #718096; vertical-alignment: center; }
+                }
+                Text { text: root.status; color: #43516b; font-size: 13px; overflow: elide; }
+            }
+        }
+        Rectangle {
+            background: #ffffff;
+            border-radius: 12px;
+            border-color: #e4e9f2;
+            border-width: 1px;
+            height: 88px;
+            VerticalBox {
+                padding: 14px;
+                spacing: 8px;
+                HorizontalBox {
+                    spacing: 12px;
+                    Text { text: "录制来源"; width: 72px; color: #43516b; vertical-alignment: center; }
+                    ComboBox {
+                        model: root.recording-devices;
+                        current-index <=> root.recording-device-index;
+                        enabled: !root.recording && !root.busy && !root.refreshing-devices;
+                        horizontal-stretch: 1;
+                        selected(value) => { root.recording-device-changed(self.current-index); }
+                    }
+                    Button { text: root.refreshing-devices ? "刷新中…" : "刷新设备"; enabled: !root.recording && !root.busy && !root.refreshing-devices; clicked => { root.refresh-recording-devices(); } }
+                }
+                Text { text: root.recording-hint; color: #718096; font-size: 12px; overflow: elide; }
+            }
+        }
+        HorizontalBox {
+            spacing: 12px;
+            Button { text: root.recording ? "停止并保存录音" : "开始课堂录音"; enabled: (root.loaded && !root.busy && !root.refreshing-devices && root.recording-device-index >= 0) || root.recording; clicked => { if root.recording { root.stop-recording(); } else { root.start-recording(); } } }
+            Rectangle { width: 4px; }
+            LineEdit { text <=> root.audio-path; placeholder-text: "或导入 WAV 课堂录音"; enabled: !root.busy && !root.recording; }
+            Button { text: "选择录音"; enabled: !root.busy && !root.recording; clicked => { root.choose-audio(); } }
+            Button { text: "转录文件"; enabled: root.loaded && !root.busy && !root.recording && root.audio-path != ""; clicked => { root.transcribe-file(); } }
+            Button { text: "取消"; enabled: root.busy; clicked => { root.cancel(); } }
+        }
+        Rectangle {
+            background: #ffffff;
+            border-radius: 12px;
+            border-width: 1px;
+            border-color: #e4e9f2;
+            vertical-stretch: 1;
+            VerticalBox {
+                padding: 18px;
+                spacing: 10px;
+                HorizontalBox {
+                    Text { text: "转录笔记"; font-size: 16px; font-weight: 600; color: #19243b; }
+                    Rectangle { horizontal-stretch: 1; }
+                    Button { text: "清空"; enabled: !root.busy && !root.recording; clicked => { root.transcript = ""; } }
+                    Button { text: "导出文本"; enabled: root.transcript != ""; clicked => { root.save-transcript(); } }
+                }
+                TextEdit { text <=> root.transcript; read-only: root.busy || root.recording; wrap: word-wrap; font-size: 18px; vertical-stretch: 1; }
+            }
+        }
+        HorizontalBox {
+            spacing: 16px;
+            if root.busy: ProgressIndicator { indeterminate: true; width: 110px; height: 6px; }
+            if root.recording: Rectangle {
+                width: 80px;
+                height: 8px;
+                background: #e4e9f2;
+                border-radius: 4px;
+                Rectangle { width: parent.width * root.level; height: parent.height; background: #37b994; border-radius: 4px; }
+            }
+            Text { text: root.detail; color: #718096; font-size: 12px; }
+            Rectangle { horizontal-stretch: 1; }
+            Text { text: "音频和文字仅保存在本机"; color: #718096; font-size: 12px; }
+        }
+    }
+}
